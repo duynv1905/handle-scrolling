@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Handle scrolling</title>
+  <style>
+    .spot {
+      overflow: hidden;
+    }
+    .spot__title-wrapper {
+      padding: 200px 20px;
+      text-align: center;
+    }
+    .spot__image-wrapper {
+      margin-right: auto;
+      margin-left: auto;
+      transform: scale(0.6);
+      transform-origin: 50% 0;
+    }
+    .spot__image {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="spot">
+      <div class="spot__title-wrapper">
+        <h1 class="spot__title">Hello World!!</h1>
+      </div>
+      <div class="spot__image-wrapper" data-js="spot-image-wrapper">
+        <img src="./images/img_spot.jpeg" class="spot__image" alt="Image description">
+      </div>
+    </section>
+  </main>
+
+  <!-- Script -->
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+  <script>
+    const $window = $(window);
+
+    $window.on('load', function() {
+      const handleScaleImageByScrolling = function(element, scaleValueInit, scaleValueTarget, scrollPositionStart, scrollPositionEnd) {
+        const $element = $(element);
+        const _scaleValueInit = Number(scaleValueInit),
+          _scaleValueTarget = Number(scaleValueTarget),
+          _scrollPositionStart = Number(scrollPositionStart),
+          _scrollPositionEnd = Number(scrollPositionEnd);
+        let _initPosition = $window.scrollTop();
+
+        if (_initPosition < _scrollPositionStart ) {
+          $element.css('transform', `scale(${_scaleValueInit})`);
+        } else if (_initPosition >= _scrollPositionStart && _initPosition <= _scrollPositionEnd) {
+          let _scaleValue = _scaleValueInit + ((_initPosition - _scrollPositionStart) / (_scrollPositionEnd - _scrollPositionStart)) * (_scaleValueTarget - _scaleValueInit);
+
+          $element.css('transform', `scale(${_scaleValue})`);
+        } else if (_initPosition > _scrollPositionEnd) {
+          $element.css('transform', `scale(${_scaleValueTarget})`);
+        }
+      };
+
+      $window.on('scroll', function() {
+        handleScaleImageByScrolling('[data-js="spot-image-wrapper"]', 0.6, 1, 100, 350);
+      }).scroll();
+    });
+  </script>
+  <!-- // Script -->
+</body>
+</html>
